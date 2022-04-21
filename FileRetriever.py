@@ -10,9 +10,9 @@ class FileRetriever:
         self.update()
     
     def update(self) -> None:
-        filename = datetime.now().strftime('%m%d%Y_%H%M%S') + '_' + self.__name
+        filename = datetime.now().strftime('%y%m%d_%H%M%S') + '_' + self.__name
         urlretrieve(self.__url, FileRetriever.DATA_RELATIVE_DIR_PATH + filename)
 
 if __name__ == '__main__':
     url = 'https://dam-api.bfs.admin.ch/hub/api/dam/assets/20964153/master'
-    fr = FileRetriever(url, 'lel.csv')
+    fr = FileRetriever(url, 'erwerbsquote.csv')
