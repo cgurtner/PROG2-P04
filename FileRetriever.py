@@ -16,8 +16,11 @@ class FileRetriever:
     def __init__(self) -> None:
         self.update()
     
-    def update(self) -> None:
-        needs_update = False
+    # update can be called on instances of this class
+    # therefore we establish a force_update parmeter
+    # if True, the file will always be updated, regardless of it's age
+    def update(self, force_update = False) -> None:
+        needs_update = False if not force_update else True
 
         # if it doesn't exist yet, it will be created
         if not os.path.isfile(FileRetriever.get_file_path()):
@@ -26,8 +29,7 @@ class FileRetriever:
             if time.time() - int(os.stat(FileRetriever.get_file_path()).st_mtime) > 600:
                 needs_update = True
         if needs_update:
-            print('Archiving old file if it exists')
-            self.archive()
+            self.__archive()
             print('Updating file {} from URL {}'.format(FileRetriever.get_file_path(), FileRetriever.get_data_file_url()))
             try:
                 file = request.urlopen(FileRetriever.get_data_file_url())
@@ -43,7 +45,7 @@ class FileRetriever:
         else:
             print('Re-Using cached file {}'.format(FileRetriever.get_file_path()))
 
-    def archive(self) -> None:
+    def __archive(self) -> None:
         if os.path.isfile(FileRetriever.get_file_path()):
             os.rename(FileRetriever.get_file_path(), FileRetriever.get_file_to_archive_path())
     
@@ -58,4 +60,14 @@ class FileRetriever:
         return FileRetriever.DATA_RELATIVE_ARCHIVE_DIR_PATH + datetime.now().strftime('%y%m%d_%H%M%S') + '_' + FileRetriever.DATA_FILE_NAME
 
 if __name__ == '__main__':
+    print('====== Initialize FileRetriever ======')
     fr = FileRetriever()
+    print()
+
+    print('====== try update() without force ======')
+    fr.update()
+    print()
+
+    print('====== try update() with force ======')
+    fr.update(True)
+    print()
