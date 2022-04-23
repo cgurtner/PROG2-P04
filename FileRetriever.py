@@ -37,7 +37,7 @@ class FileRetriever:
                 print('URL {} not reachable anymore! ({})'.format(FileRetriever.get_data_file_url(), e))
             else:
                 print('Processing file...')
-                data = file.read().decode()
+                data = file.read().decode('utf-8')
                 to_file = open(FileRetriever.get_file_path(), 'w')
                 to_file.write(data)
                 to_file.close()
