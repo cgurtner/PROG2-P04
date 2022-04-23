@@ -9,30 +9,42 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 url = 'https://dam-api.bfs.admin.ch/hub/api/dam/assets/20964153/master'
-file = FileRetriever(url, 'erwerbsquote.csv')
+file = FileRetriever()
 
 class main_application():
     def __init__(self):
-        self.read_data(file.filename)
-        self.clean_data()
+        self.read_data()
         self.ch_employed_by_year()
+        self.ch_unemployment_by_year()
         
-    def read_data(self,filename):
-        self.df = pd.read_csv('data/' + filename, sep = ';')
-    
-    #We just want the total numbers
-    def clean_data(self):
-        self.df = self.df[~self.df.UNIT_MEA.str.contains("in")]
-        self.df = self.df[~self.df.ERWP.str.contains("1")]
-        self.df = self.df[~self.df.POP1564.str.contains("1")]
+    def read_data(self):
+        self.data = pd.read_csv('data/erwerbsquote_nach_kanton.csv', sep = ';')
 
     def ch_employed_by_year(self):
-       list_of_years = self.df['TIME_PERIOD'].to_list()
-       list_of_years = list(dict.fromkeys(list_of_years))
-       plt.title('Anzahl Arbeitnehmende Schweiz pro Jahr')
-       temp_df = self.df[~self.df.GEO.str.contains("0")]
-       plt.bar(list_of_years, temp_df['OBS_VALUE'])
-
+        list_of_years = self.data['TIME_PERIOD'].to_list()
+        list_of_years = list(dict.fromkeys(list_of_years))
+        fig, ax = plt.subplots()
+        temp_df = self.data[~self.data.UNIT_MEA.str.contains("in")]
+        temp_df = temp_df[~temp_df.GEO.str.contains("0")]
+        temp_df = temp_df[~temp_df.UNIT_MEA.str.contains("in")]
+        temp_df = temp_df[~temp_df.ERWP.str.contains("1")]
+        temp_df = temp_df[~temp_df.POP1564.str.contains("1")]
+        ax.set(title = 'Arbeitnehmende Schweiz', ylabel='Anzahl in Mio', xlabel= 'Jahr')
+        ax.plot(list_of_years, temp_df['OBS_VALUE'])
+       
+    def ch_unemployment_by_year(self):
+        list_of_years = self.data['TIME_PERIOD'].to_list()
+        list_of_years = list(dict.fromkeys(list_of_years))
+        temp_df = self.data
+        temp_df = temp_df[~temp_df.ERWL.str.contains("0")]
+        temp_df = temp_df[~temp_df.ERWL.str.contains('Total')]
+        temp_df = temp_df[~temp_df.GEO.str.contains("0")]
+        self.temp_df = temp_df[temp_df['UNIT_MEA'].str.contains('%', na=False)]
+        fig, ax = plt.subplots()
+        ax.set(title='Arbeitslose Schweiz',ylabel= 'Anahl Arbeitslose in % der Erwerbspersonen', xlabel= 'Jahr')
+        ax.plot(list_of_years, self.temp_df['OBS_VALUE'])
+        
+        
 a = main_application()
-aa = pd.read_csv('data/'+file.filename, sep = ';')
+aa = pd.read_csv('data/erwerbsquote_nach_kanton.csv', sep = ';')
 
