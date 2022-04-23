@@ -10,8 +10,8 @@ class FileRetriever:
         self.update()
     
     def update(self) -> None:
-        filename = datetime.now().strftime('%y%m%d_%H%M%S') + '_' + self.__name
-        urlretrieve(self.__url, FileRetriever.DATA_RELATIVE_DIR_PATH + filename)
+        self.filename = datetime.now().strftime('%y%m%d_%H%M%S') + '_' + self.__name
+        urlretrieve(self.__url, FileRetriever.DATA_RELATIVE_DIR_PATH + self.filename)
 
 if __name__ == '__main__':
     url = 'https://dam-api.bfs.admin.ch/hub/api/dam/assets/20964153/master'
