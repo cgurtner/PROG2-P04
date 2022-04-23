@@ -1,3 +1,7 @@
+"""
+__author__ = "Cyrill Gurtner"
+__email__  = "gurtncyr@students.zhaw.ch"
+"""
 import os
 import time
 from datetime import datetime
