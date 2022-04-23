@@ -32,16 +32,9 @@ class FileRetriever:
             self.__archive()
             print('Updating file {} from URL {}'.format(FileRetriever.get_file_path(), FileRetriever.get_data_file_url()))
             try:
-                file = request.urlopen(FileRetriever.get_data_file_url())
+                request.urlretrieve(FileRetriever.get_data_file_url(), FileRetriever.get_file_path())
             except Exception as e:
-                print('URL {} not reachable anymore! ({})'.format(FileRetriever.get_data_file_url(), e))
-            else:
-                print('Processing file...')
-                data = file.read().decode('utf-8')
-                to_file = open(FileRetriever.get_file_path(), 'w')
-                to_file.write(data)
-                to_file.close()
-                print('Done.')
+                print('\nURL {} not reachable anymore!\n({})'.format(FileRetriever.get_data_file_url(), e))
         else:
             print('Re-Using cached file {}'.format(FileRetriever.get_file_path()))
 
