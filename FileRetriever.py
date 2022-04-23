@@ -5,7 +5,7 @@ __email__  = "gurtncyr@students.zhaw.ch"
 import os
 import time
 from datetime import datetime
-from urllib.request import urlretrieve
+from urllib import request
 
 class FileRetriever:
     DATA_FILE_URL = 'https://dam-api.bfs.admin.ch/hub/api/dam/assets/20964153/master'
@@ -23,15 +23,23 @@ class FileRetriever:
         if not os.path.isfile(FileRetriever.get_file_path()):
             needs_update = True
         else:
-            if time.time() - int(os.stat(FileRetriever.get_file_path()).st_mtime) > 6:
+            if time.time() - int(os.stat(FileRetriever.get_file_path()).st_mtime) > 600:
                 needs_update = True
-
         if needs_update:
             print('Archiving old file if it exists')
             self.archive()
-
             print('Updating file {} from URL {}'.format(FileRetriever.get_file_path(), FileRetriever.get_data_file_url()))
-            urlretrieve(FileRetriever.get_data_file_url(), FileRetriever.get_file_path())
+            try:
+                file = request.urlopen(FileRetriever.get_data_file_url())
+            except Exception as e:
+                print('URL {} not reachable anymore! ({})'.format(FileRetriever.get_data_file_url(), e))
+            else:
+                print('Processing file...')
+                data = file.read().decode()
+                to_file = open(FileRetriever.get_file_path(), 'w')
+                to_file.write(data)
+                to_file.close()
+                print('Done.')
         else:
             print('Re-Using cached file {}'.format(FileRetriever.get_file_path()))
 
