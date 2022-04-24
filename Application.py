@@ -82,7 +82,7 @@ class Application():
         temp_df = temp_df.to_frame().reset_index()
         temp_df = temp_df.rename(columns = {'GEO':'code'})
         temp_df = pd.merge(temp_df, self.canton_df, on = 'code', how= 'outer')
-        fig, ax = plt.subplots(figsize=(20,15))
+        fig, ax = plt.subplots(figsize=(15,10))
         ax.set(title = 'Druchschnittsarbeitslosigkeit von 2010-2020 pro Kanton', ylabel= 'Arbeitslose in %', xlabel= 'Kanton')
         ax.bar(temp_df['abbrev'], temp_df['OBS_VALUE'])
         plt.show()
