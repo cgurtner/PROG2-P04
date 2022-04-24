@@ -45,7 +45,7 @@ class FileRetriever:
         archive_path = FileRetriever.get_file_to_archive_path()
         if os.path.isfile(file_path):
             os.rename(file_path, archive_path)
-            print('Archived ' + file_path + ' at ' + archive_path)
+            print('Archived ' + file_path + ' to ' + archive_path)
     
     # add some static members
     def get_data_file_url() -> str:
@@ -63,9 +63,9 @@ if __name__ == '__main__':
     print()
 
     print('====== try update() without force ======')
-    fr.update()
+    fr.update() # should use the cached file
     print()
 
     print('====== try update() with force ======')
-    fr.update(True)
+    fr.update(True) # should explicitly update the file
     print()
