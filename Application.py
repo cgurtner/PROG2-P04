@@ -54,7 +54,7 @@ class Application():
         temp_df = temp_df[~temp_df.ERWP.str.contains("1")]
         temp_df = temp_df[~temp_df.POP1564.str.contains("1")]
         ax.set(title = 'Arbeitnehmende Schweiz', ylabel='Anzahl in Mio', xlabel= 'Jahr')
-        ax.plot(list_of_years, temp_df['OBS_VALUE'])
+        ax.plot(list_of_years, temp_df['OBS_VALUE']/1000000)
         plt.show()
        
     def ch_unemployment_by_year(self):
