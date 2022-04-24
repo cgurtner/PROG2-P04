@@ -21,26 +21,31 @@ class FileRetriever:
     # if True, the file will always be updated, regardless of it's age
     def update(self, force_update = False) -> None:
         needs_update = False if not force_update else True
+        file_path, data_url = FileRetriever.get_file_path(), FileRetriever.get_data_file_url()
 
         # if it doesn't exist yet, it will be created
-        if not os.path.isfile(FileRetriever.get_file_path()):
+        if not os.path.isfile(file_path):
             needs_update = True
         else:
-            if time.time() - int(os.stat(FileRetriever.get_file_path()).st_mtime) > 600:
+            if time.time() - int(os.stat(file_path).st_mtime) > 600:
                 needs_update = True
+                
         if needs_update:
             self.__archive()
-            print('Updating file {} from URL {}'.format(FileRetriever.get_file_path(), FileRetriever.get_data_file_url()))
+            print('Updating file {} from URL {}'.format(file_path, data_url))
             try:
-                request.urlretrieve(FileRetriever.get_data_file_url(), FileRetriever.get_file_path())
+                request.urlretrieve(data_url, file_path)
             except Exception as e:
-                print('\nURL {} not reachable anymore!\n({})'.format(FileRetriever.get_data_file_url(), e))
+                print('\nURL {} not reachable anymore!\n({})'.format(data_url, e))
         else:
-            print('Re-Using cached file {}'.format(FileRetriever.get_file_path()))
+            print('Re-Using cached file {}'.format(file_path))
 
     def __archive(self) -> None:
-        if os.path.isfile(FileRetriever.get_file_path()):
-            os.rename(FileRetriever.get_file_path(), FileRetriever.get_file_to_archive_path())
+        file_path = FileRetriever.get_file_path()
+        archive_path = FileRetriever.get_file_to_archive_path()
+        if os.path.isfile(file_path):
+            os.rename(file_path, archive_path)
+            print('Archived ' + file_path + ' at ' + archive_path)
     
     # add some static members
     def get_data_file_url() -> str:
