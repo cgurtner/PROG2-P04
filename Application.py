@@ -8,40 +8,41 @@ from FileRetriever import FileRetriever
 import pandas as pd
 import matplotlib.pyplot as plt
 
-class main_application():
+class Application():
     CANTON_CODES = [
-['CH011','Waadt'],
-['CH012','Wallis'],
-['CH013','Genf'],
-['CH021','Bern'],
-['CH022','Freiburg'],
-['CH023','Solothurn'],
-['CH024','Neuenburg'],
-['CH025','Jura'],
-['CH031','Basel-Stadt'],
-['CH032','Basel-Landschaft'],
-['CH033','Aargau'],
-['CH040','Zürich'],
-['CH051','Glarus'],
-['CH052','Schaffhausen'],
-['CH053','Appenzell Ausserrhoden'],
-['CH054','Appenzell Innerrhoden'],
-['CH055','St. Gallen'],
-['CH056','Graubünden'],
-['CH057','Thurgau'],
-['CH061','Luzern'],
-['CH062','Uri'],
-['CH063','Schwyz'],
-['CH064','Obwalden'],
-['CH065','Nidwalden'],
-['CH066','Zug'],
-['CH070','Tessin'],]
+        ['CH011','Waadt'],
+        ['CH012','Wallis'],
+        ['CH013','Genf'],
+        ['CH021','Bern'],
+        ['CH022','Freiburg'],
+        ['CH023','Solothurn'],
+        ['CH024','Neuenburg'],
+        ['CH025','Jura'],
+        ['CH031','Basel-Stadt'],
+        ['CH032','Basel-Landschaft'],
+        ['CH033','Aargau'],
+        ['CH040','Zürich'],
+        ['CH051','Glarus'],
+        ['CH052','Schaffhausen'],
+        ['CH053','Appenzell Ausserrhoden'],
+        ['CH054','Appenzell Innerrhoden'],
+        ['CH055','St. Gallen'],
+        ['CH056','Graubünden'],
+        ['CH057','Thurgau'],
+        ['CH061','Luzern'],
+        ['CH062','Uri'],
+        ['CH063','Schwyz'],
+        ['CH064','Obwalden'],
+        ['CH065','Nidwalden'],
+        ['CH066','Zug'],
+        ['CH070','Tessin']
+    ]
     def __init__(self):
-        self.canton_df = pd.DataFrame(main_application.CANTON_CODES, columns= ['code','canton'])
+        self.canton_df = pd.DataFrame(Application.CANTON_CODES, columns=['code','canton'])
         self.read_data()
         
     def read_data(self):
-        self.data = pd.read_csv('data/erwerbsquote_nach_kanton.csv', sep = ';')
+        self.data = pd.read_csv(FileRetriever.get_file_path(), sep = ';')
 
     def ch_employed_by_year(self):
         list_of_years = self.data['TIME_PERIOD'].to_list()
@@ -54,6 +55,7 @@ class main_application():
         temp_df = temp_df[~temp_df.POP1564.str.contains("1")]
         ax.set(title = 'Arbeitnehmende Schweiz', ylabel='Anzahl in Mio', xlabel= 'Jahr')
         ax.plot(list_of_years, temp_df['OBS_VALUE'])
+        plt.show()
        
     def ch_unemployment_by_year(self):
         list_of_years = self.data['TIME_PERIOD'].to_list()
@@ -66,6 +68,7 @@ class main_application():
         fig, ax = plt.subplots()
         ax.set(title='Arbeitslose Schweiz',ylabel= 'Anahl Arbeitslose in % der Erwerbspersonen', xlabel= 'Jahr')
         ax.plot(list_of_years, temp_df['OBS_VALUE'])
+        plt.show()
     
     def avg_unemployment_per_canton(self):
         temp_df = self.data
@@ -82,14 +85,16 @@ class main_application():
         fig, ax = plt.subplots(figsize=(20,15))
         ax.set(title = 'Druchschnittsarbeitslosigkeit von 2010-2020 pro Kanton', ylabel= 'Arbeitslose in %', xlabel= 'Kanton')
         ax.bar(temp_df['code'], temp_df['OBS_VALUE'])
+        plt.show()
         print('Canton-code legend:')
         print(temp_df[['code', 'canton']])
         
 
 if __name__ == '__main__':
-    FileRetriever()
-    a = main_application()
-    a.ch_employed_by_year()
-    a.ch_unemployment_by_year()
-    a.avg_unemployment_per_canton()
+    fr = FileRetriever()
+
+    app = Application()
+    app.ch_employed_by_year()
+    app.ch_unemployment_by_year()
+    app.avg_unemployment_per_canton()
 
