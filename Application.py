@@ -89,9 +89,7 @@ class Application():
 
 if __name__ == '__main__':
     fr = FileRetriever()
-
     app = Application()
     app.ch_employed_by_year()
     app.ch_unemployment_by_year()
     app.avg_unemployment_per_canton()
-
